@@ -1,0 +1,110 @@
+﻿@page "/NavigationMenu"
+<nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#/">
+                        <img alt="Service Pulse" src="img/logo.svg">
+                    </a>
+                </div>
+                <div id="navbar" class="collapse navbar-collapse navbar-right navbar-inverse">
+                    <ul class="nav navbar-nav navbar-inverse" ng-show="is_compatible_with_sc">
+                        <li class="@(IsActive("/") ? "active" : "")">
+                            <a href="/v1/#/dashboard">
+                                <i class="fa fa-dashboard icon-white"></i>
+                                <span class="navbar-label">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="@(IsActive("/heartbeats") ? "active" : "")">
+                            <a href="/heartbeats">
+                                <i class="fa fa-heartbeat icon-white"></i>
+                                <span class="navbar-label">Heartbeats</span>
+                                <span hidden="@(heartbeats > 0)" class="badge badge-important">@heartbeats</span>
+                            </a>
+                        </li>
+                        <li ng-if="isMonitoringEnabled"
+                            class="@(IsActive("/monitoring") || IsActive("/monitoring/dashboard") ? "active" : "")">
+                            <a href="/v1/#/monitoring">
+                                <i class="fa pa-monitoring icon-white"></i>
+                                <span class="navbar-label">Monitoring</span>
+                                <span hidden="@(disconnectedendpoints > 0)"
+                                    class="badge badge-important ">
+                                    @disconnectedendpoints
+                                </span>
+                            </a>
+                        </li>
+                        <li class="@(IsActive("/failed-messages/groups") || IsActive("failed-messages/all") || IsActive("failed-messages/archived") || IsActive("failed-messages/retries") ? "active" : "")">
+                            <a href="/v1/#/failed-messages/groups">
+                                <i class="fa fa-envelope icon-white"></i>
+                                <span class="navbar-label">Failed Messages</span>
+                                <span hidden="@(failedmessages > 0)" class="badge badge-important ">@failedmessages</span>
+                            </a>
+                        </li>
+                        <li class="@(IsActive("/custom-checks") ? "active" : "")">
+                            <a href="/v1/#/custom-checks">
+                                <i class="fa fa-check icon-white"></i>
+                                <span class="navbar-label">Custom Checks</span>
+                                <span hidden="@(failedcustomchecks > 0)"
+                                    class="badge badge-important ">
+                                    @failedcustomchecks
+                                </span>
+                            </a>
+                        </li>
+                        <li class="@(IsActive("/events") ? "active" : "")">
+                            <a href="/v1/#/events">
+                                <i class="fa fa-list-ul icon-white"></i>
+                                <span class="navbar-label">Events</span>
+                            </a>
+                        </li>
+                        <li class="@(IsActive("/configuration") ? "active" : "")">
+                            <a href="/v1/#/configuration">
+                                <i class="fa fa-cog icon-white"></i>
+                                <span class="navbar-label">Configuration</span>
+                                <span class="no-margin" exclamation type="{{licensewarning}}"></span>
+                                <span class="no-margin" exclamation type="{{connectionswarning}}"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="btn-feedback" href="https://github.com/Particular/ServicePulse/issues/new"
+                               target="_blank">
+                                <i class="fa fa-comment"></i>
+                                <span class="navbar-label">Feedback</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+@code {
+
+    [Parameter]
+    public string Path { get; set; }
+
+    private bool IsActive(string path)
+    {
+        if (path == Path)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private string Show(Func<bool> condition)
+    {
+        if (condition.Invoke())
+        {
+            return "hidden";
+        }
+        return " ";
+    }
+
+    private string hiddenHeartbeats => heartbeats > 0 ? "hidden" : "";
+    
+    private int heartbeats = 10;
+
+    private int disconnectedendpoints = 1;
+
+    private int failedmessages = 2;
+
+    private int failedcustomchecks = 1;
+}

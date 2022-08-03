@@ -6,5 +6,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RunAnalyzers>false</RunAnalyzers>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.0-preview.6.22330.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ServicePulse.Blazor\ServicePulse.Blazor.csproj" />
+  </ItemGroup>
   
 </Project>

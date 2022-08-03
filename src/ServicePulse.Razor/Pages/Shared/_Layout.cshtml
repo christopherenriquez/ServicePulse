@@ -1,15 +1,15 @@
 ﻿@{
     string pagePath = Context.Request.Path;
 
-    bool IsActive(string path)
-    {
-        if (path == pagePath)
-        {
-            return true; 
-        }
-
-        return false; 
-    }
+    // bool IsActive(string path)
+    // {
+    //     if (path == pagePath)
+    //     {
+    //         return true;
+    //     }
+    //
+    //     return false;
+    // }
 
     string Show(Func<bool> condition)
     {
@@ -20,13 +20,13 @@
         return "";
     }
 
-    var heartbeats = 10;
-
-    var disconnectedendpoints = 1;
-
-    var failedmessages = 2;
-
-    var failedcustomchecks = 1; 
+    // var heartbeats = 10;
+    //
+    // var disconnectedendpoints = 1;
+    //
+    // var failedmessages = 2;
+    //
+    // var failedcustomchecks = 1;
 }
 <!doctype html>
 <html lang="en">
@@ -64,100 +64,26 @@
     <![endif]-->
 
 </head>
-    <body>
-        <noscript>
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="alert col-sm-10 col-md-10 alert-warning">
-                        <h4>Warning!</h4>
-                        <p>
-                            You need to have <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a> enabled to use this site.
-                        </p>
-                    </div>
+<body>
+    <noscript>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="alert col-sm-10 col-md-10 alert-warning">
+                    <h4>Warning!</h4>
+                    <p>
+                        You need to have <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a> enabled to use this site.
+                    </p>
                 </div>
             </div>
-        </noscript>
+        </div>
+    </noscript>
     <header>
-           <nav class="navbar navbar-inverse navbar-fixed-top">
-               <div class="container-fluid">
-                   <div class="navbar-header">
-                       <a class="navbar-brand" href="#/">
-                           <img alt="Service Pulse" src="img/logo.svg">
-                       </a>
-                   </div>
-                   <div id="navbar" class="collapse navbar-collapse navbar-right navbar-inverse">
-                       <ul class="nav navbar-nav navbar-inverse" ng-show="is_compatible_with_sc">
-                           <li class="@(IsActive("/dashboard") ? "active":"")">
-                               <a href="/v1/#/dashboard">
-                                   <i class="fa fa-dashboard icon-white"></i>
-                                   <span class="navbar-label">Dashboard</span>
-                               </a>
-                           </li>
-                           <li class="@(IsActive("/heartbeats") ? "active":"")">
-                               <a href="/heartbeats">
-                                   <i class="fa fa-heartbeat icon-white"></i>
-                                   <span class="navbar-label">Heartbeats</span>
-                                   <span @Show(() => heartbeats > 0) class="badge badge-important">@heartbeats</span>
-                               </a>
-                           </li>
-                           <li ng-if="isMonitoringEnabled"
-                               class="@(IsActive("/monitoring") || IsActive("/monitoring/dashboard")? "active":"")">
-                               <a href="/v1/#/monitoring">
-                                   <i class="fa pa-monitoring icon-white"></i>
-                                   <span class="navbar-label">Monitoring</span>
-                                   <span @Show(() => disconnectedendpoints > 0)
-                                       class="badge badge-important ">@disconnectedendpoints</span>
-                               </a>
-                           </li>
-                           <li class="@(IsActive("/failed-messages/groups") 
-                                        || IsActive("failed-messages/all")
-                                        || IsActive("failed-messages/archived")
-                                        || IsActive("failed-messages/retries")
-                                          ? "active":"")">
-                               <a href="/v1/#/failed-messages/groups">
-                                   <i class="fa fa-envelope icon-white"></i>
-                                   <span class="navbar-label">Failed Messages</span>
-                                   <span @Show(() => failedmessages > 0) class="badge badge-important ">@failedmessages</span>
-                               </a>
-                           </li>
-                           <li class="@(IsActive("/custom-checks") ? "active":"")">
-                               <a href="/v1/#/custom-checks">
-                                   <i class="fa fa-check icon-white"></i>
-                                   <span class="navbar-label">Custom Checks</span>
-                                   <span @Show(() => failedcustomchecks > 0)
-                                       class="badge badge-important ">@failedcustomchecks</span>
-                               </a>
-                           </li>
-                           <li class="@(IsActive("/events") ? "active":"")">
-                               <a href="/v1/#/events">
-                                   <i class="fa fa-list-ul icon-white"></i>
-                                   <span class="navbar-label">Events</span>
-                               </a>
-                           </li>
-                           <li class="@(IsActive("/configuration") ? "active":"")">
-                               <a href="/v1/#/configuration">
-                                   <i class="fa fa-cog icon-white"></i>
-                                   <span class="navbar-label">Configuration</span>
-                                   <span class="no-margin" exclamation type="{{licensewarning}}"></span>
-                                   <span class="no-margin" exclamation type="{{connectionswarning}}"></span>
-                               </a>
-                           </li>
-                           <li>
-                               <a class="btn-feedback" href="https://github.com/Particular/ServicePulse/issues/new"
-                                   target="_blank">
-                                   <i class="fa fa-comment"></i>
-                                   <span class="navbar-label">Feedback</span>
-                               </a>
-                           </li>
-                       </ul>
-                   </div>
-               </div>
-           </nav>
+        <sp-navmenu path="@Context.Request.Path"></sp-navmenu>
     </header>
 
     <div class="container-fluid">
         <a id="pagetop"></a>
-        <div id="connectingToServiceControl" @Show(()=> true)>
+        <div id="connectingToServiceControl" @Show(() => true)>
             <div class="row">
                 <div class="sp-loader"></div>
             </div>
@@ -165,35 +91,7 @@
         <div id="view">@RenderBody()</div>
     </div>
 
-<footer class="footer">
-    <div class="container">
-        <div class="row">
-            <div class="connectivity-status" ng-show="version !== ''">
-                <span>
-                    <i class="fa fa-plus sp-blue"></i>
-                    <a href="#/configuration/platformconnection">Connect new endpoint</a>
-                </span>
-                <span ng-show="!newspversion">
-                    ServicePulse v{{Version}}
-                </span>
-                <span ng-show="newspversion">
-                    ServicePulse v{{Version}} (<i ng-show="newspversion" class="fa fa-level-up fake-link"></i> <a href="{{newspversionlink}}" target="_blank">v{{newspversionnumber}} available</a>)
-                </span>
-                <span uib-tooltip="ServiceControl URL {{serviceControlUrl}}">
-                    Service Control:
-                    <span class="connected-status" ng-if="isSCConnected && !isSCConnecting">
-                        <div class="fa pa-connection-success"></div> <span ng-show="!SCVersion">Connected</span> <span ng-show="SCVersion" class="versionnumber">v{{SCVersion}}</span> <span ng-show="newscversion" class="newscversion">(<i class="fa fa-level-up fake-link"></i> <a href="{{newscversionlink}}" target="_blank">v{{newscversionnumber}} available</a>)</span>
-                    </span>
-                    <span ng-if="!isSCConnected && !isSCConnecting" class="connection-failed">
-                        <i class="fa pa-connection-failed"></i> Not connected
-                    </span>
-                    <span ng-if="isSCConnecting" class="connection-establishing">
-                        <i class="fa pa-connection-establishing"></i> Connecting
-                    </span>
-                </span>
-                <monitoring-connectivity-status ng-if="isMonitoringEnabled"></monitoring-connectivity-status>
-            </div>
-        </div>
-    </div>
-</footer>
+    <sp-footer></sp-footer>
+    <script src="_content/Microsoft.AspNetCore.Components.CustomElements/BlazorCustomElements.js"></script>
+    <script src="_framework/blazor.webassembly.js"></script>
 </body>
